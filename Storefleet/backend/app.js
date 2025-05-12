@@ -16,6 +16,7 @@ app.use(cors({
   origin: 'https://storefleet-frontend.vercel.app', // Allow your Vite React frontend
   credentials: true,
 }));
+app.options("*",cors());
 app.use(express.json());
 app.use(cookieParser());
 //ROUTES
