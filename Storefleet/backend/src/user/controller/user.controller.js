@@ -35,12 +35,13 @@ export const userLogin = async (req, res, next) => {
     if (!email || !password) {
       return next(new ErrorHandler(400, "please enter email/password"));
     }
-    const user = await findUserRepo({ email }, true);
+    const user = await findUserRepo({ email:email }, true);
     if (!user) {
       return next(
         new ErrorHandler(401, "user not found! register yourself now!!")
       );
     }
+    console.log('comparing the password of the user in the user.controller>userLogin function');
     const passwordMatch = await user.comparePassword(password);
     if (!passwordMatch) {
       return next(new ErrorHandler(401, "Invalid email or passswor!"));
