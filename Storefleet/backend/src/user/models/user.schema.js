@@ -1,21 +1,20 @@
 import mongoose from "mongoose";
 import validator from "validator";
-import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import crypto from "crypto";
 
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: [true, "user name is requires"],
+    required: [true, "user name is required"],
     maxLength: [30, "user name can't exceed 30 characters"],
-    minLength: [2, "name should have atleast 2 charcters"],
+    minLength: [2, "name should have at least 2 characters"],
   },
   email: {
     type: String,
     required: [true, "user email is required"],
     unique: true,
-    validate: [validator.isEmail, "pls enter a valid email"],
+    validate: [validator.isEmail, "Please enter a valid email"],
   },
   password: {
     type: String,
@@ -43,64 +42,29 @@ const userSchema = new mongoose.Schema({
   resetPasswordExpire: Date,
 });
 
-userSchema.pre("save", async function (next) { //DONE
-  if (!this.isModified('password')) 
-    return next();
-  try{
-    const saltRounds=10;
-  const salt=await bcrypt.genSalt(saltRounds);
-  this.password=await bcrypt.hash(this.password,salt);
-  next();
-}catch(err){
-  console.log(err);
-  next();
-}
-
-
-});
-userSchema.pre('findOneAndUpdate', async function () {//IMPLEMENTED AND DONE
-  try {
-    const update = this.getUpdate();
-    const password = update.password || (update.$set && update.$set.password);
-    if (!password) {
-      return;  
-    }
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
-    if (update.password) {
-      update.password = hashedPassword;
-    } else if (update.$set && update.$set.password) {
-      update.$set.password = hashedPassword;
-    }
-  } catch (err) {
-    console.error('Error in pre-findOneAndUpdate:', err);
-    throw err;
-  }
-});
-
-
-
-// JWT Token
+// JWT Token method
 userSchema.methods.getJWTToken = function () {
   return jwt.sign({ id: this._id }, process.env.JWT_Secret, {
     expiresIn: process.env.JWT_Expire,
   });
 };
-// user password compare 
-userSchema.methods.comparePassword = async function (password) {
-  return await bcrypt.compare(password, this.password);
+
+// Password comparison (directly compare strings now)
+userSchema.methods.comparePassword = async function (inputPassword) {
+  // Warning: Plaintext comparison (use only if hashing is intentionally skipped)
+  return inputPassword === this.password;
 };
 
-// generatePasswordResetToken
-userSchema.methods.getResetPasswordToken = async function () {
+// Generate password reset token
+userSchema.methods.getResetPasswordToken = function () {
   const resetToken = crypto.randomBytes(20).toString("hex");
-  // hashing and updating user resetPasswordToken
+
   this.resetPasswordToken = crypto
     .createHash("sha256")
     .update(resetToken)
     .digest("hex");
 
-  this.resetPasswordExpire = Date.now() + 10 * 60 * 1000;
+  this.resetPasswordExpire = Date.now() + 10 * 60 * 1000; // 10 minutes
 
   return resetToken;
 };
