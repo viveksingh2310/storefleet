@@ -21,9 +21,7 @@ export const createNewUser = async (req, res, next) => {// done and handles succ
     const result=await checkUser(email);
     if(result)
       throw new Error("User Already Exist");
-
     await sendWelcomeEmail(newUser);
-
   } catch (err) {
     return next(new ErrorHandler(400, err));
   }

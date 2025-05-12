@@ -51,9 +51,11 @@ userSchema.methods.getJWTToken = function () {
 
 // Password comparison (directly compare strings now)
 userSchema.methods.comparePassword = async function (inputPassword) {
-  // Warning: Plaintext comparison (use only if hashing is intentionally skipped)
+  console.log("Stored password:", this.password);
+  console.log("Input password:", inputPassword);
   return inputPassword === this.password;
 };
+
 
 // Generate password reset token
 userSchema.methods.getResetPasswordToken = function () {

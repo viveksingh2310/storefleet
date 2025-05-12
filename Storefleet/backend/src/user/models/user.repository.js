@@ -5,6 +5,7 @@ import { ObjectId } from "mongoose";
 export const createNewUserRepo = async (user) => {
   return await new UserModel(user).save();
 };
+ // Ensure no bcrypt hash involved
 
 export const findUserRepo = async (factor, withPassword = false) => {
   if (withPassword) return await UserModel.findOne(factor).select("+password");
@@ -31,7 +32,10 @@ export const getAllUsersRepo = async () => {
   return UserModel.find({});
 };
 export const checkUser = async(email)=>{
-  return UserModel.find({email:email});
+  const result= UserModel.find({email:email});
+  if(result)
+    return result;
+  else return null;
 }
 
 export const deleteUserRepo = async (_id) => {
