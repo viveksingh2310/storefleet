@@ -13,7 +13,7 @@ import orderRoutes from "./src/order/routes/order.routes.js";
 dotenv.config({ path: './config/uat.env' });
 const app = express();
 app.use(cors({
-  origin: 'https://storefleet-frontend.vercel.app/', // Allow your Vite React frontend
+  origin: 'https://storefleet-frontend.vercel.app', // Allow your Vite React frontend
   credentials: true,
 }));
 app.use(express.json());
