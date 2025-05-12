@@ -13,7 +13,7 @@ import orderRoutes from "./src/order/routes/order.routes.js";
 dotenv.config({ path: './config/uat.env' });
 const app = express();
 app.use(cors({
-  origin: 'http://localhost:5173', // Allow your Vite React frontend
+  origin: '*', // Allow your Vite React frontend
   credentials: true,
 }));
 app.use(express.json());
