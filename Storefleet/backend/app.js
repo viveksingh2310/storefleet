@@ -32,7 +32,7 @@ app.get("/api/storefleet/clear-cookies", (req, res) => {
 });
 app.get("/api/storefleet/get-cookies", (req, res) => {
   const { token ,user} = req.cookies;
-  if (!token) {
+  if (!token ||!user) {
     return res.status(404).json({ success: false, message: "No token found in cookies." });
   }
   res.status(200).json({ success: true, token ,user});

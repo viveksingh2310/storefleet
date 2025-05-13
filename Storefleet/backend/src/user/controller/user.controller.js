@@ -60,7 +60,7 @@ export const logoutUser = async (req, res, next) => {
     .json({ success: true, msg: "logout successful" });
 };
 
-export const forgetPassword = async (req, res, next) => { //DONE
+export const forgetPassword = async (req, res, next) => {//DONE
   const {email}=req.body;
   const user=await checkUser(email);
   if(!user) 
@@ -81,7 +81,7 @@ export const forgetPassword = async (req, res, next) => { //DONE
         resetPasswordExpire:resetexpirestring ,
       }
     });
-  const url=`http://localhost:${process.env.PORT}`+`/api/storefleet/user/password/reset/`+resetstring;
+  const url=`https://storefleet-frontend.vercel.app`+`/api/storefleet/user/password/reset/`+resetstring;
   return await sendPasswordResetEmail(user,url);
 };
 
