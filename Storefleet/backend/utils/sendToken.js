@@ -9,8 +9,8 @@ export const sendToken = async (user, res, statusCode) => {
       Date.now() + process.env.COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
     ),
     httpOnly: true,
-    secure:false, // Don't set secure in dev!
-  sameSite: 'lax' // or 'none'
+    secure:true, // Don't set secure in dev!
+  sameSite: "None", // or 'none'
   };
   res.cookie("user",user,cookieOptions);
   res
